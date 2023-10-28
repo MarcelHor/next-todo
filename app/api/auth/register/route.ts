@@ -1,8 +1,7 @@
 import prisma from "@/lib/db";
 import {NextResponse} from "next/server";
 import Joi from 'joi';
-
-const bcrypt = require('bcrypt');
+import {genSalt, hash} from "bcrypt";
 
 export async function POST(req: Request) {
 
@@ -10,7 +9,7 @@ export async function POST(req: Request) {
         const body = await req.json();
 
         const schema = Joi.object({
-            username: Joi.string().min(3).max(20).required(),
+            name: Joi.string().min(3).max(20).required(),
             email: Joi.string().email().required(),
             password: Joi.string().min(6).required(),
             confirmPassword: Joi.string().valid(Joi.ref('password')).required()
@@ -39,12 +38,12 @@ export async function POST(req: Request) {
             return NextResponse.json({error: "User already exists."}, {status: 400});
         }
         const saltRounds = parseInt(process.env.SALT_ROUNDS as string, 10);
-        const salt = await bcrypt.genSalt(saltRounds);
-        const hashedPassword = await bcrypt.hash(body.password, salt);
+        const salt = await genSalt(saltRounds);
+        const hashedPassword = await hash(body.password, salt);
 
         await prisma.user.create({
             data: {
-                username: body.username,
+                name: body.name,
                 email: body.email,
                 password: hashedPassword
             }
