@@ -30,7 +30,11 @@ export default function RegisterForm() {
             }
         } catch (error: any) {
             setSuccess(null);
-            setError("Something went wrong. Please try again later.");
+            if (error.response.status === 400) {
+                setError(error.response.data.error);
+            } else {
+                setError("Something went wrong. Please try again later.");
+            }
         }
     }
 

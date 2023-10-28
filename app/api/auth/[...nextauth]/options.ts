@@ -4,6 +4,16 @@ import prisma from "@/lib/db";
 
 const bcrypt = require('bcrypt');
 
+import type {DefaultSession} from 'next-auth';
+
+declare module 'next-auth' {
+    interface Session {
+        user: DefaultSession['user'] & {
+            id: string;
+        };
+    }
+}
+
 export const options: NextAuthOptions = {
     providers: [
         CredentialsProvider({
@@ -47,5 +57,11 @@ export const options: NextAuthOptions = {
             }
         })
     ],
+    session: {
+        strategy: "jwt",
+    },
+    pages: {
+        signIn: '/login'
+    },
     secret: process.env.NEXTAUTH_SECRET,
 }
