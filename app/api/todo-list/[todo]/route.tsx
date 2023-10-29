@@ -19,13 +19,15 @@ export async function GET(req: any, res: any) {
             return NextResponse.json({error: "Unauthorized"}, {status: 401});
         }
 
-        const lists = await prisma.todoList.findMany({
+        const {listId} = req.json();
+
+        const todos = await prisma.todo.findMany({
             where: {
-                userId: parseInt(user.id)
+                listId: parseInt(listId)
             },
         });
 
-        return NextResponse.json(lists, {status: 200});
+        return NextResponse.json(todos, {status: 200});
     } catch (error: any) {
         return NextResponse.json({error: error.message}, {status: 500});
     }
@@ -38,15 +40,16 @@ export async function POST(req: any, res: any) {
             return NextResponse.json({error: "Unauthorized"}, {status: 401});
         }
 
-        const {title} = await req.json();
-        const list = await prisma.todoList.create({
+        const {listId, text} = await req.json();
+        const todo = await prisma.todo.create({
             data: {
-                title: title,
-                userId: parseInt(user.id)
+                text: text,
+                listId: parseInt(listId),
+                isCompleted: false
             }
         });
 
-        return NextResponse.json("List successfully created", {status: 200});
+        return NextResponse.json("Todo successfully created", {status: 200});
     } catch (error: any) {
         return NextResponse.json({error: error.message}, {status: 500});
     }
@@ -59,14 +62,38 @@ export async function DELETE(req: any, res: any) {
             return NextResponse.json({error: "Unauthorized"}, {status: 401});
         }
 
-        const {id} = await req.json();
-        const list = await prisma.todoList.delete({
+        const {todoId} = await req.json();
+        await prisma.todo.delete({
             where: {
-                id: parseInt(id)
+                id: parseInt(todoId)
             }
         });
 
-        return NextResponse.json("List successfully deleted", {status: 200});
+        return NextResponse.json("Todo successfully deleted", {status: 200});
+    } catch (error: any) {
+        return NextResponse.json({error: error.message}, {status: 500});
+    }
+}
+
+export async function PUT(req: any, res: any) {
+    try {
+        const user = await validateSession();
+        if (!user) {
+            return NextResponse.json({error: "Unauthorized"}, {status: 401});
+        }
+
+        const {todoId, isCompleted, text} = await req.json();
+        await prisma.todo.update({
+            where: {
+                id: parseInt(todoId)
+            },
+            data: {
+                isCompleted: isCompleted,
+                text: text
+            }
+        });
+
+        return NextResponse.json("Todo successfully updated", {status: 200});
     } catch (error: any) {
         return NextResponse.json({error: error.message}, {status: 500});
     }

@@ -101,7 +101,7 @@ export const options: NextAuthOptions = {
             return {
                 ...session,
                 user: {
-                    id: token.sub,
+                    id: token.id,
                     email: token.email,
                     name: token.name,
                 }

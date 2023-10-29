@@ -8,5 +8,6 @@ export default async function Register() {
 
     if (session) redirect("/dashboard");
 
+
     return <RegisterForm/>;
 }
