@@ -1,26 +1,26 @@
-import axios from "axios";
+import CreateTodoList from "@/components/todoList/CreateTodoList";
+import TodoList from "@/components/todoList/TodoList";
+import {getServerSession} from "next-auth/next";
+import {options} from "@/app/api/auth/[...nextauth]/options";
+import prisma from "@/lib/db";
 
-export default function Dashboard() {
-
+export default async function Dashboard() {
+    const session: any = await getServerSession(options);
+    const lists = await prisma.todoList.findMany({
+        where: {
+            userId: parseInt(session.user.id)
+        }
+    });
 
     return (
-        <div className="h-full w-full">
-            <div className="drawer drawer-open">
-                <input id="my-drawer-2" type="checkbox" className="drawer-toggle"/>
-                <div className="drawer-content flex flex-col items-center justify-center bg-base-200">
-
-
-
-                </div>
-                <div className="drawer-side">
-
-
-                    <ul className="menu bg-base-100 p-4 w-80  text-base-content">
-                        <li><a>Sidebar Item 1</a></li>
-                        <li><a>Sidebar Item 2</a></li>
-                    </ul>
-                </div>
-            </div>
+        <div className="h-full w-2/3 mt-16">
+            <CreateTodoList/>
+            <span className={"divider"}/>
+            <ul className="space-y-2">
+                {lists.map((list) => (
+                    <TodoList key={list.id} list={list}/>
+                ))}
+            </ul>
         </div>
     )
 }

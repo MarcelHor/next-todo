@@ -33,20 +33,20 @@ export async function GET(req: any, res: any) {
 
 export async function POST(req: any, res: any) {
     try {
+
         const user = await validateSession();
         if (!user) {
             return NextResponse.json({error: "Unauthorized"}, {status: 401});
         }
 
         const {title} = await req.json();
-        const list = await prisma.todoList.create({
+        await prisma.todoList.create({
             data: {
                 title: title,
                 userId: parseInt(user.id)
             }
         });
-
-        return NextResponse.json("List successfully created", {status: 200});
+        return NextResponse.json("TodoList successfully created", {status: 200});
     } catch (error: any) {
         return NextResponse.json({error: error.message}, {status: 500});
     }
@@ -58,16 +58,16 @@ export async function DELETE(req: any, res: any) {
         if (!user) {
             return NextResponse.json({error: "Unauthorized"}, {status: 401});
         }
-
         const {id} = await req.json();
-        const list = await prisma.todoList.delete({
+        await prisma.todoList.delete({
             where: {
-                id: parseInt(id)
+                id: parseInt(id),
+                userId: parseInt(user.id)
             }
         });
-
-        return NextResponse.json("List successfully deleted", {status: 200});
+        return NextResponse.json("TodoList successfully deleted", {status: 200});
     } catch (error: any) {
+        console.log(error);
         return NextResponse.json({error: error.message}, {status: 500});
     }
 }

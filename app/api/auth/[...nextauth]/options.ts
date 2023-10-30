@@ -60,13 +60,14 @@ export const options: NextAuthOptions = {
         signIn: "/login",
     },
     callbacks: {
-        async signIn({ user, account }) {
+        async signIn({user, account}) {
             try {
                 // If the user is signing in with GitHub, we want to create a user in our database if they don't already exist
                 if (account?.provider === "github" && user?.email && user?.name) {
                     await prisma.user.upsert({
-                        where: { email: user.email },
+                        where: {email: user.email},
                         create: {
+                            id: parseInt(user.id as string),
                             email: user.email,
                             name: user.name,
                             password: "",
@@ -84,7 +85,7 @@ export const options: NextAuthOptions = {
             return true;
         },
         // Changes the JWT that is returned from the API route
-        async jwt({ token, account, user }: { token: any, account?: any, user?: any }) {
+        async jwt({token, account, user}: { token: any, account?: any, user?: any }) {
             try {
                 if (account && user) {
                     token.accessToken = account.access_token;
@@ -97,7 +98,7 @@ export const options: NextAuthOptions = {
             }
         },
         // Changes the session object
-        session: ({ session, token }) => {
+        session: ({session, token}) => {
             return {
                 ...session,
                 user: {

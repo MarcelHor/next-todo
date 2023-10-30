@@ -41,8 +41,8 @@ export default function RegisterForm() {
 
     return (
         <>
-            <div className="card-body w-full flex items-center justify-center px-2 sm:px-0">
-                <div className="bg-none md:bg-base-200 p-6 sm:p-12 space-y-4 w-full sm:w-3/4 lg:w-1/2 rounded-xl">
+            <div className="card-body bg-base-200 w-full flex items-center justify-center px-2 sm:px-0">
+                <div className="bg-none md:bg-base-300 p-6 sm:p-12 space-y-4 w-full sm:w-3/4 lg:w-1/2 rounded-xl">
                     {success && <div className="alert alert-success text-white">{success}</div>}
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 w-full">
                         <h2 className="card-title text-center text-lg sm:text-xl">Register</h2>
