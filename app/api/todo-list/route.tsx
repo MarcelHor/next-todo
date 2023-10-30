@@ -25,6 +25,7 @@ export async function GET(req: any, res: any) {
             },
         });
 
+
         return NextResponse.json(lists, {status: 200});
     } catch (error: any) {
         return NextResponse.json({error: error.message}, {status: 500});
@@ -40,6 +41,11 @@ export async function POST(req: any, res: any) {
         }
 
         const {title} = await req.json();
+
+        if (!title) {
+            return NextResponse.json({error: "Title is required"}, {status: 400});
+        }
+
         await prisma.todoList.create({
             data: {
                 title: title,
@@ -59,12 +65,23 @@ export async function DELETE(req: any, res: any) {
             return NextResponse.json({error: "Unauthorized"}, {status: 401});
         }
         const {id} = await req.json();
+        if (!id) {
+            return NextResponse.json({error: "Id is required"}, {status: 400});
+        }
+
+        await prisma.todo.deleteMany({
+            where: {
+                listId: parseInt(id)
+            }
+        });
+
         await prisma.todoList.delete({
             where: {
                 id: parseInt(id),
                 userId: parseInt(user.id)
             }
         });
+
         return NextResponse.json("TodoList successfully deleted", {status: 200});
     } catch (error: any) {
         console.log(error);
