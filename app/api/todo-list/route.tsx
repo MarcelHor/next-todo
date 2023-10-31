@@ -2,6 +2,7 @@ import {getServerSession} from "next-auth/next"
 import {options} from "@/app/api/auth/[...nextauth]/options";
 import {NextResponse} from "next/server";
 import prisma from "@/lib/db";
+import Joi from 'joi';
 
 async function validateSession() {
     const session = await getServerSession(options);
@@ -11,6 +12,27 @@ async function validateSession() {
 
     return session.user as any;
 }
+
+const postSchema = Joi.object({
+    title: Joi.string().required().max(50)
+}).messages
+({
+    "string.base": `List title should be a type of 'text'`,
+    "string.empty": `Cannot be an empty field`,
+    "string.min": `List title should have a minimum length of {#limit}`,
+    "string.max": `List title should have a maximum length of {#limit}`,
+    "any.required": `Title is a required field`
+});
+
+
+const deleteSchema = Joi.object({
+    id: Joi.number().required()
+}).messages
+({
+    "number.base": `Id should be a type of 'number'`,
+    "number.empty": `Cannot be an empty field`,
+    "any.required": `Id is a required field`
+});
 
 export async function GET(req: any, res: any) {
     try {
@@ -41,9 +63,9 @@ export async function POST(req: any, res: any) {
         }
 
         const {title} = await req.json();
-
-        if (!title) {
-            return NextResponse.json({error: "Title is required"}, {status: 400});
+        const {error} = postSchema.validate({title});
+        if (error) {
+            return NextResponse.json({error: error.message}, {status: 400});
         }
 
         await prisma.todoList.create({
@@ -64,9 +86,11 @@ export async function DELETE(req: any, res: any) {
         if (!user) {
             return NextResponse.json({error: "Unauthorized"}, {status: 401});
         }
+
         const {id} = await req.json();
-        if (!id) {
-            return NextResponse.json({error: "Id is required"}, {status: 400});
+        const {error} = deleteSchema.validate({id});
+        if (error) {
+            return NextResponse.json({error: error.message}, {status: 400});
         }
 
         await prisma.todo.deleteMany({

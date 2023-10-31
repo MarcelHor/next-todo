@@ -31,7 +31,7 @@ export default async function TodoItemPage({params}: any) {
     }
 
     return (
-        <div className="h-full w-2/3 mt-16">
+        <div className="h-full w-full px-2 md:w-2/3 mt-16">
             <CreateTodoItem listId={params.id}/>
             <span className={"divider"}/>
             <ul className="space-y-2">

@@ -13,10 +13,10 @@ export default async function Dashboard() {
     });
 
     return (
-        <div className="h-full w-2/3 mt-16">
+        <div className="h-full w-full px-2 md:w-2/3 mt-16">
             <CreateTodoList/>
             <span className={"divider"}/>
-            <ul className="space-y-2">
+            <ul className="grid md:grid-cols-3 md:gap-4 gap-2 grid-cols-1 mt-2">
                 {lists.map((list) => (
                     <TodoList key={list.id} list={list}/>
                 ))}

@@ -7,15 +7,18 @@ import {useState} from "react";
 export default function CreateTodoItem({listId}: any) {
     const router = useRouter();
     const [text, setText] = useState("");
+    const [error, setError] = useState("");
 
     const handleSubmit = async (e: any) => {
         try {
             e.preventDefault();
             await createTodoItem(listId, text);
+            setText("");
+            setError("");
             e.target.reset();
             router.refresh();
-        } catch (e) {
-            console.log(e);
+        } catch (e: any ) {
+            setError(e.message);
         }
     }
 
@@ -34,6 +37,7 @@ export default function CreateTodoItem({listId}: any) {
                         onChange={(e) => setText(e.target.value)}
                     />
                     <button className="btn btn-primary btn-sm">Create</button>
+                    {error && <p className="text-error">{error}</p>}
                 </div>
             </form>
         </>

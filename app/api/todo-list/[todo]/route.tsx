@@ -2,6 +2,7 @@ import {getServerSession} from "next-auth/next"
 import {options} from "@/app/api/auth/[...nextauth]/options";
 import {NextRequest, NextResponse} from "next/server";
 import prisma from "@/lib/db";
+import joi from "joi";
 
 async function validateSession(): Promise<any | null> {
     try {
@@ -51,10 +52,23 @@ export async function POST(request: NextRequest, {params}: { params: { todo: str
         if (!user || !await hasAccessToList(parseInt(user.id), parseInt(params.todo))) {
             return NextResponse.json({error: "Unauthorized"}, {status: 401});
         }
+
         const {text} = await request.json();
-        if (!text) {
-            return NextResponse.json({error: "Text is required"}, {status: 400});
+        const schema = joi.object({
+            text: joi.string().required().min(1).max(100)
+        }).messages({
+            "string.base": `Todo text should be a type of 'text'`,
+            "string.empty": `Todo text cannot be an empty field`,
+            "string.min": `Todo text should have a minimum length of {#limit}`,
+            "string.max": `Todo text should have a maximum length of {#limit}`,
+            "any.required": `Todo text is a required field`
+        });
+
+        const {error} = schema.validate({text: text});
+        if (error) {
+            return NextResponse.json({error: error.message}, {status: 400});
         }
+
         await prisma.todo.create({
             data: {
                 text: text,
@@ -75,9 +89,19 @@ export async function DELETE(request: NextRequest, {params}: { params: { todo: s
             return NextResponse.json({error: "Unauthorized"}, {status: 401});
         }
         const {todoId} = await request.json();
-        if (!todoId) {
-            return NextResponse.json({error: "TodoId is required"}, {status: 400});
+        const schema = joi.object({
+            todoId: joi.number().required()
+        }).messages({
+            "number.base": `TodoId should be a type of 'number'`,
+            "number.empty": `TodoId cannot be an empty field`,
+            "any.required": `TodoId is a required field`
+        });
+
+        const {error} = schema.validate({todoId: todoId});
+        if (error) {
+            return NextResponse.json({error: error.message}, {status: 400});
         }
+
         await prisma.todo.delete({where: {id: parseInt(todoId)}});
         return NextResponse.json("Todo successfully deleted", {status: 200});
     } catch (error: any) {
@@ -92,9 +116,28 @@ export async function PUT(request: NextRequest, {params}: { params: { todo: stri
             return NextResponse.json({error: "Unauthorized"}, {status: 401});
         }
         const {todoId, isCompleted, text} = await request.json();
-        if (!todoId || !isCompleted || !text) {
-            return NextResponse.json({error: "TodoId, isCompleted and text are required"}, {status: 400});
+
+        const schema = joi.object({
+            todoId: joi.number().required(),
+            isCompleted: joi.boolean().required(),
+            text: joi.string().required().min(1).max(255)
+        }).messages({
+            "number.base": `TodoId should be a type of 'number'`,
+            "number.empty": `TodoId cannot be an empty field`,
+            "any.required": `TodoId is a required field`,
+            "boolean.base": `IsCompleted should be a type of 'boolean'`,
+            "boolean.empty": `IsCompleted cannot be an empty field`,
+            "string.base": `Text should be a type of 'text'`,
+            "string.empty": `Text cannot be an empty field`,
+            "string.min": `Text should have a minimum length of {#limit}`,
+            "string.max": `Text should have a maximum length of {#limit}`,
+        });
+
+        const {error} = schema.validate({todoId: todoId, isCompleted: isCompleted, text: text});
+        if (error) {
+            return NextResponse.json({error: error.message}, {status: 400});
         }
+
         await prisma.todo.update({
             where: {id: parseInt(todoId)},
             data: {isCompleted: isCompleted, text: text}
