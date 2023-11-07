@@ -1,56 +1,12 @@
-import prisma from "@/lib/db";
 import {NextResponse} from "next/server";
-import Joi from 'joi';
-import {genSalt, hash} from "bcrypt";
+import {registerUser} from "./registerController";
 
-export async function POST(req: Request) {
-
+export async function POST(req: NextResponse<any>) {
     try {
         const body = await req.json();
-
-        const schema = Joi.object({
-            name: Joi.string().min(3).max(20).required(),
-            email: Joi.string().email().required(),
-            password: Joi.string().min(6).required(),
-            confirmPassword: Joi.string().valid(Joi.ref('password')).required()
-        }).messages({
-            'string.empty': `Please fill in the {#label} field.`,
-            'string.min': `The {#label} field must be at least {#limit} characters long.`,
-            'string.max': `The {#label} field must be less than or equal to {#limit} characters long.`,
-            'string.email': `Please enter a valid email address.`,
-            'any.required': `The {#label} field is required.`,
-            'any.only': `The {#label} field does not match.`
-        });
-
-        const {error} = schema.validate(body);
-
-        if (error) {
-            return NextResponse.json({error: error.details[0].message}, {status: 400});
-        }
-
-        const user = await prisma.user.findFirst({
-            where: {
-                email: body.email,
-            }
-        })
-
-        if (user) {
-            return NextResponse.json({error: "User already exists."}, {status: 400});
-        }
-        const saltRounds = parseInt(process.env.SALT_ROUNDS as string, 10);
-        const salt = await genSalt(saltRounds);
-        const hashedPassword = await hash(body.password, salt);
-
-        await prisma.user.create({
-            data: {
-                name: body.name,
-                email: body.email,
-                password: hashedPassword
-            }
-        })
-
-        return NextResponse.json({message: "User registered."}, {status: 201});
+        const result = await registerUser(body);
+        return NextResponse.json(result, {status: 201});
     } catch (error: any) {
-        return NextResponse.json({error: error.message}, {status: 500});
+        return NextResponse.json({error: error.message}, {status: error.status || 500});
     }
 }
