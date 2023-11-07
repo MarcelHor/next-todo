@@ -59,3 +59,17 @@ export const deleteTodoItem = async (todoListId: number, todoId: number) => {
         throw new Error(error.response?.data?.error || 'Unknown error');
     }
 }
+
+export const updateTodoItem = async (todoListId: number, todoId: number, text: string, isCompleted: boolean) => {
+    try {
+        const response = await axios.put(`${API_URL}/todo-list/${todoListId}/`, { todoId, text, isCompleted }, {
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+        return response.data;
+    } catch (error : any) {
+        throw new Error(error.response?.data?.error || 'Unknown error');
+    }
+}

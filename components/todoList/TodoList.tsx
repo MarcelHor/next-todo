@@ -9,13 +9,17 @@ export default function TodoList({list}: any) {
     const router = useRouter();
 
     const handleDelete = async (event: any, id: number) => {
-        event.stopPropagation();
-        const confirm = window.confirm("Are you sure you want to delete this list? All todos will be deleted as well. THIS ACTION CANNOT BE UNDONE!");
+        const confirm = window.confirm("Are you sure you want to delete this list?");
         if (!confirm) return;
 
-        await deleteTodoList(id);
-        router.refresh();
+        try {
+            await deleteTodoList(id);
+            router.refresh();
+        } catch (error) {
+            console.error("Error during deletion:", error);
+        }
     }
+
 
     return (
         <li key={list.id} className="card bg-base-100 shadow-xl hover:brightness-90 flex flex-row">

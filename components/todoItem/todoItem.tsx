@@ -1,9 +1,10 @@
 "use client";
 
-import {deleteTodoItem} from "@/lib/api/todoService";
+import {deleteTodoItem, updateTodoItem} from "@/lib/api/todoService";
+import Link from "next/link";
 import {useRouter} from "next/navigation";
 
-export function TodoItem({todo}: any, {listId}: any) {
+export function TodoItem({todo}: any) {
     const router = useRouter();
 
     const handleDelete = async () => {
@@ -15,15 +16,24 @@ export function TodoItem({todo}: any, {listId}: any) {
         }
     }
 
+    const handleSwitch = async () => {
+        try {
+            await updateTodoItem(todo.listId, todo.id, todo.text, !todo.isCompleted);
+            router.refresh();
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     return (
         <li className="flex justify-between">
             <div className="flex items-center space-x-4">
-                <input type="checkbox" className="checkbox checkbox-accent"/>
+                <input type="checkbox" className="checkbox " checked={todo.isCompleted} onChange={handleSwitch}/>
                 <span>{todo.text}</span>
             </div>
             <div className="flex space-x-2">
-                <button className="btn btn-sm btn-outline btn-secondary">Edit</button>
-                <button className="btn btn-sm btn-outline btn-accent" onClick={handleDelete}>Delete</button>
+                 <Link href={`/dashboard/${todo.listId}/update/${todo.id}`} className={"btn btn-sm btn-outline btn-warning"}>Edit</Link>
+                <button className="btn btn-sm btn-outline btn-error" onClick={handleDelete}>Delete</button>
             </div>
         </li>
     )
