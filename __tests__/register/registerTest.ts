@@ -61,4 +61,15 @@ describe('registerUser', () => {
 
         await expect(registerUser(reqBody)).rejects.toThrow("The \"name\" field must be at least 3 characters long.");
     });
+    it('throws an error if the name is too long', async () => {
+        const reqBody = {
+            name: 'TEIOASNMDIOMSANIDONAS ION IDOASN IODAAM I IOMSAI MAS IDSA DS 58189148914896148974',
+            email: 'test@example.com',
+            password: 'password123',
+            confirmPassword: 'password123',
+        };
+
+        await expect(registerUser(reqBody)).rejects.toThrow( "The \"name\" field must be less than or equal to 20 characters long.");
+
+    });
 });
