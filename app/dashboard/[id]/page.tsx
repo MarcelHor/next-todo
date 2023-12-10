@@ -31,14 +31,19 @@ export default async function TodoItemPage({params}: any) {
     });
 
     if (!list || Number(list.userId) !== Number(user.id)) {
-         notFound();
+        notFound();
     }
 
+    // @ts-ignore
     return (
         <div className="h-full w-full px-2 md:w-2/3 mt-16">
             <div className="flex justify-between items-center">
-                <Link href={"/dashboard"} className="flex justify-between items-center hover:opacity-75"><FontAwesomeIcon icon={faArrowLeft} className="text-2xl cursor-pointer mr-2" size={"xs"}/>Dashboard</Link>
-                <Link className={"link hover:opacity-75"} href={`http://localhost:3000/api/todo-list/${params.id}`}>JSON</Link>
+                <Link href={"/dashboard"}
+                      className="flex justify-between items-center hover:opacity-75"><FontAwesomeIcon icon={faArrowLeft}
+                                                                                                      className="text-2xl cursor-pointer mr-2"
+                                                                                                      size={"xs"}/>Dashboard</Link>
+                <Link className={"link hover:opacity-75"}
+                      href={`http://localhost:3000/api/todo-list/${params.id}`}>JSON</Link>
             </div>
             <CreateTodoItem listId={params.id}/>
             <span className={"divider"}/>

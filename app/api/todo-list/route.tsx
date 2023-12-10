@@ -1,6 +1,6 @@
 import {getServerSession} from "next-auth/next"
 import {options} from "@/app/api/auth/[...nextauth]/options";
-import {NextResponse} from "next/server";
+import {NextResponse, NextRequest} from "next/server";
 import prisma from "@/lib/db";
 import Joi from 'joi';
 
@@ -34,7 +34,7 @@ const deleteSchema = Joi.object({
     "any.required": `Id is a required field`
 });
 
-export async function GET(req: any, res: any) {
+export async function GET(req: NextRequest, res: NextResponse) {
     try {
         const user = await validateSession();
         if (!user) {
@@ -54,7 +54,7 @@ export async function GET(req: any, res: any) {
     }
 }
 
-export async function POST(req: any, res: any) {
+export async function POST(req: NextRequest, res: NextResponse) {
     try {
 
         const user = await validateSession();
@@ -80,7 +80,7 @@ export async function POST(req: any, res: any) {
     }
 }
 
-export async function DELETE(req: any, res: any) {
+export async function DELETE(req: NextRequest, res: NextResponse) {
     try {
         const user = await validateSession();
         if (!user) {

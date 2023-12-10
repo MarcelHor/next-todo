@@ -7,7 +7,7 @@ type Todo = {
     id: number;
     isCompleted: boolean;
     text: string;
-    createdAt: string;
+    createdAt: Date;
     listId: number;
 };
 
