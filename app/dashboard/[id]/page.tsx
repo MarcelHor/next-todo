@@ -43,7 +43,7 @@ export default async function TodoItemPage({params}: any) {
                                                                                                       className="text-2xl cursor-pointer mr-2"
                                                                                                       size={"xs"}/>Dashboard</Link>
                 <Link className={"link hover:opacity-75"}
-                      href={`https://next-todo-red.vercel.app:3000/api/todo-list/${params.id}`}>JSON</Link>
+                      href={`https://next-todo-red.vercel.app/api/todo-list/${params.id}`}>JSON</Link>
             </div>
             <CreateTodoItem listId={params.id}/>
             <span className={"divider"}/>

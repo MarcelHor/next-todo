@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = "https://next-todo-red.vercel.app:3000/api";
+const API_URL = "https://next-todo-red.vercel.app/api";
 
 export const createTodoList = async (title: string) => {
     try {
