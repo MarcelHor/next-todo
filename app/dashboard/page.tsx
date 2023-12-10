@@ -26,7 +26,7 @@ export default async function Dashboard() {
         <div className="h-full w-full px-2 md:w-2/3 mt-16">
             <div className="flex justify-between items-center">
                 <Link href={"/"} className="flex justify-between items-center hover:opacity-75"><FontAwesomeIcon icon={faArrowLeft} className="text-2xl cursor-pointer mr-2" size={"xs"}/>Home</Link>
-                <Link className={"link hover:opacity-75"} href={"http://localhost:3000/api/todo-list"}>JSON</Link>
+                <Link className={"link hover:opacity-75"} href={"https://next-todo-red.vercel.app:3000/api/todo-list"}>JSON</Link>
             </div>
             <CreateTodoList/>
             <span className={"divider"}/>
