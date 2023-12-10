@@ -6,9 +6,16 @@ import prisma from "@/lib/db";
 import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
+import { notFound } from 'next/navigation'
 
 export default async function Dashboard() {
     const session: any = await getServerSession(options);
+
+    if (!session) {
+        notFound();
+    }
+
+
     const lists = await prisma.todoList.findMany({
         where: {
             userId: parseInt(session.user.id)

@@ -5,16 +5,13 @@ import {options} from "@/app/api/auth/[...nextauth]/options";
 import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
+import {notFound} from "next/navigation";
 
 export default async function UpdateTodo({params}: any) {
     const session = await getServerSession(options);
 
     if (!session) {
-        return (
-            <div className="h-full w-2/3 mt-16">
-                <h1 className="text-2xl font-bold">404</h1>
-            </div>
-        )
+        notFound();
     }
 
     const todo = await prisma.todo.findUnique({
