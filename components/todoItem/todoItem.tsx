@@ -28,6 +28,7 @@ export function TodoItem({todo}: any) {
     return (
         <li className="flex justify-between">
             <div className="flex items-center space-x-4">
+                {/*idk: should i use defaultChecked or checked?*/}
                 <input type="checkbox" className="checkbox " checked={todo.isCompleted} onChange={handleSwitch}/>
                 <span>{todo.text}</span>
             </div>

@@ -7,6 +7,7 @@ import Link from "next/link";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import { notFound } from 'next/navigation'
+import {API_URL} from "@/utils/Api";
 
 export default async function Dashboard() {
     const session: any = await getServerSession(options);
@@ -26,7 +27,7 @@ export default async function Dashboard() {
         <div className="h-full w-full px-2 md:w-2/3 mt-16">
             <div className="flex justify-between items-center">
                 <Link href={"/"} className="flex justify-between items-center hover:opacity-75"><FontAwesomeIcon icon={faArrowLeft} className="text-2xl cursor-pointer mr-2" size={"xs"}/>Home</Link>
-                <Link className={"link hover:opacity-75"} href={"https://next-todo-red.vercel.app/api/todo-list"}>JSON</Link>
+                <Link className={"link hover:opacity-75"} href={`${API_URL}/api/todo-list`}>JSON</Link>
             </div>
             <CreateTodoList/>
             <span className={"divider"}/>

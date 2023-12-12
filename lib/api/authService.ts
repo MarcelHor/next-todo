@@ -1,6 +1,5 @@
 import axios from "axios";
-
-const API_URL = "https://next-todo-red.vercel.app/api";
+import { API_URL } from "@/utils/Api";
 
 interface RegisterProps {
     name: string;
@@ -12,7 +11,7 @@ interface RegisterProps {
 
 export const registerService = async (data: RegisterProps) => {
     try {
-        const response = await axios.post(`${API_URL}/auth/register`, data, {
+        const response = await axios.post(`${API_URL}/api/auth/register`, data, {
             withCredentials: true,
             headers: {
                 "Content-Type": "application/json"

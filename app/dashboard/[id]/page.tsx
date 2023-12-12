@@ -7,6 +7,7 @@ import {faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import TodoDisplay from "@/components/todoItem/TodoDisplay";
 import {notFound} from "next/navigation";
+import {API_URL} from "@/utils/Api";
 
 export default async function TodoItemPage({params}: any) {
     const session: any = await getServerSession(options);
@@ -43,7 +44,7 @@ export default async function TodoItemPage({params}: any) {
                                                                                                       className="text-2xl cursor-pointer mr-2"
                                                                                                       size={"xs"}/>Dashboard</Link>
                 <Link className={"link hover:opacity-75"}
-                      href={`https://next-todo-red.vercel.app/api/todo-list/${params.id}`}>JSON</Link>
+                      href={`${API_URL}/api/todo-list/${params.id}`}>JSON</Link>
             </div>
             <CreateTodoItem listId={params.id}/>
             <span className={"divider"}/>
