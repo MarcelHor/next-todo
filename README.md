@@ -53,3 +53,6 @@ Otestoval jsem si logiku v todo controllerech.
 - https://next-todo-red.vercel.app/dashboard/ - v dashboardu a v listech jsou tlačítka na json výstupy
 - https://next-todo-red.vercel.app/api/todo-list/4 - příklad JSON výstupu
 - https://next-todo-red.vercel.app/login - pro zobrazení json výstupu je potřeba být přihlášený!
+
+## Zdrojové kódy
+- https://github.com/MarcelHor/next-todo
